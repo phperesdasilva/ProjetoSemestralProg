@@ -33,6 +33,18 @@ def func2():
 
     return sg.Window('função 2', layout=layout, finalize=True)
 
+def lerPos(win, ev, lista):
+    if window == win and event == ev:
+        if len(lista) != 4:
+            lista.append(values[0])
+            lista.append(values[1])
+            lista.append(values[2])
+            lista.append(values[3])
+            sg.Popup('Nova posição!:', 'Pos. R: '+ str(lista[0]), 'Pos. X: '+ str(lista[1]), 'Pos. Y: '+ str(lista[2]), 'Pos. Z: '+ str(lista[3]))
+        else:
+            sg.Popup('Coordenadas:', 'Pos. R: '+ str(lista[0]), 'Pos. X: '+ str(lista[1]), 'Pos. Y: '+ str(lista[2]), 'Pos. Z: '+ str(lista[3]))
+
+
 w1, w2 = menu(), None
 
 pos1 = []
@@ -57,57 +69,63 @@ while True:
         w2.hide()
         w1.un_hide()
     
-    if window == w2 and event =='Pos. 1':
-        if len(pos1) != 4:
-            pos1.append(values[0])
-            pos1.append(values[1])
-            pos1.append(values[2])
-            pos1.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos1[0]), 'Pos. X: '+ str(pos1[1]), 'Pos. Y: '+ str(pos1[2]), 'Pos. Z: '+ str(pos1[3]))
-        else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos1[0]), 'Pos. X: '+ str(pos1[1]), 'Pos. Y: '+ str(pos1[2]), 'Pos. Z: '+ str(pos1[3]))
+    lerPos(w2, 'Pos. 1', pos1)
+    lerPos(w2, 'Pos. 2', pos2)
+    lerPos(w2, 'Pos. 3', pos3)
+    lerPos(w2, 'Pos. 4', pos4)
+    lerPos(w2, 'Pos. 5', pos5)
 
-    if window == w2 and event =='Pos. 2':
-        if len(pos2) != 4:
-            pos2.append(values[0])
-            pos2.append(values[1])
-            pos2.append(values[2])
-            pos2.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos2[0]), 'Pos. X: '+ str(pos2[1]), 'Pos. Y: '+ str(pos2[2]), 'Pos. Z: '+ str(pos2[3]))
-        else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos2[0]), 'Pos. X: '+ str(pos2[1]), 'Pos. Y: '+ str(pos2[2]), 'Pos. Z: '+ str(pos2[3]))
+    # if window == w2 and event =='Pos. 1':
+    #     if len(pos1) != 4:
+    #         pos1.append(values[0])
+    #         pos1.append(values[1])
+    #         pos1.append(values[2])
+    #         pos1.append(values[3])
+    #         sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos1[0]), 'Pos. X: '+ str(pos1[1]), 'Pos. Y: '+ str(pos1[2]), 'Pos. Z: '+ str(pos1[3]))
+    #     else:
+    #         sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos1[0]), 'Pos. X: '+ str(pos1[1]), 'Pos. Y: '+ str(pos1[2]), 'Pos. Z: '+ str(pos1[3]))
 
-
-    if window == w2 and event =='Pos. 3':
-        if len(pos3) != 4:
-            pos3.append(values[0])
-            pos3.append(values[1])
-            pos3.append(values[2])
-            pos3.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos3[0]), 'Pos. X: '+ str(pos3[1]), 'Pos. Y: '+ str(pos3[2]), 'Pos. Z: '+ str(pos3[3]))
-        else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos3[0]), 'Pos. X: '+ str(pos3[1]), 'Pos. Y: '+ str(pos3[2]), 'Pos. Z: '+ str(pos3[3]))
+    # if window == w2 and event =='Pos. 2':
+    #     if len(pos2) != 4:
+    #         pos2.append(values[0])
+    #         pos2.append(values[1])
+    #         pos2.append(values[2])
+    #         pos2.append(values[3])
+    #         sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos2[0]), 'Pos. X: '+ str(pos2[1]), 'Pos. Y: '+ str(pos2[2]), 'Pos. Z: '+ str(pos2[3]))
+    #     else:
+    #         sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos2[0]), 'Pos. X: '+ str(pos2[1]), 'Pos. Y: '+ str(pos2[2]), 'Pos. Z: '+ str(pos2[3]))
 
 
-    if window == w2 and event =='Pos. 4':
-        if len(pos4) != 4:
-            pos4.append(values[0])
-            pos4.append(values[1])
-            pos4.append(values[2])
-            pos4.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos4[0]), 'Pos. X: '+ str(pos4[1]), 'Pos. Y: '+ str(pos4[2]), 'Pos. Z: '+ str(pos4[3]))
-        else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos4[0]), 'Pos. X: '+ str(pos4[1]), 'Pos. Y: '+ str(pos4[2]), 'Pos. Z: '+ str(pos4[3]))
+    # if window == w2 and event =='Pos. 3':
+    #     if len(pos3) != 4:
+    #         pos3.append(values[0])
+    #         pos3.append(values[1])
+    #         pos3.append(values[2])
+    #         pos3.append(values[3])
+    #         sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos3[0]), 'Pos. X: '+ str(pos3[1]), 'Pos. Y: '+ str(pos3[2]), 'Pos. Z: '+ str(pos3[3]))
+    #     else:
+    #         sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos3[0]), 'Pos. X: '+ str(pos3[1]), 'Pos. Y: '+ str(pos3[2]), 'Pos. Z: '+ str(pos3[3]))
 
-    if window == w2 and event =='Pos. 5':
-        if len(pos5) != 4:
-            pos5.append(values[0])
-            pos5.append(values[1])
-            pos5.append(values[2])
-            pos5.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos5[0]), 'Pos. X: '+ str(pos5[1]), 'Pos. Y: '+ str(pos5[2]), 'Pos. Z: '+ str(pos5[3]))
-        else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos5[0]), 'Pos. X: '+ str(pos5[1]), 'Pos. Y: '+ str(pos5[2]), 'Pos. Z: '+ str(pos5[3]))
+
+    # if window == w2 and event =='Pos. 4':
+    #     if len(pos4) != 4:
+    #         pos4.append(values[0])
+    #         pos4.append(values[1])
+    #         pos4.append(values[2])
+    #         pos4.append(values[3])
+    #         sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos4[0]), 'Pos. X: '+ str(pos4[1]), 'Pos. Y: '+ str(pos4[2]), 'Pos. Z: '+ str(pos4[3]))
+    #     else:
+    #         sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos4[0]), 'Pos. X: '+ str(pos4[1]), 'Pos. Y: '+ str(pos4[2]), 'Pos. Z: '+ str(pos4[3]))
+
+    # if window == w2 and event =='Pos. 5':
+    #     if len(pos5) != 4:
+    #         pos5.append(values[0])
+    #         pos5.append(values[1])
+    #         pos5.append(values[2])
+    #         pos5.append(values[3])
+    #         sg.Popup('Nova posição!:', 'Pos. R: '+ str(pos5[0]), 'Pos. X: '+ str(pos5[1]), 'Pos. Y: '+ str(pos5[2]), 'Pos. Z: '+ str(pos5[3]))
+    #     else:
+    #         sg.Popup('Coordenadas:', 'Pos. R: '+ str(pos5[0]), 'Pos. X: '+ str(pos5[1]), 'Pos. Y: '+ str(pos5[2]), 'Pos. Z: '+ str(pos5[3]))
 
     
     if window == w2 and event =='Clear':
