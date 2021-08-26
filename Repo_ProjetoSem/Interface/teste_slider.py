@@ -22,7 +22,7 @@ def func1():
 
     ]
 
-    return sg.Window('função livre', layout=layout, finalize=True)
+    return sg.Window('Função Livre', layout=layout, finalize=True)
 
 def func2():
     layout = [
