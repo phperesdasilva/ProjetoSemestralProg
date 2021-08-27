@@ -16,9 +16,25 @@ board.digital[base].mode = SERVO
 board.digital[x].mode = SERVO 
 board.digital[y].mode = SERVO 
 
+def rotateServo_teste(pin, prev, angle):
+    if(angle<prev):
+        t=-1
+    elif(angle==prev):
+        if prev>0:
+            prev = prev-1
+            t = 1
+        else:
+            prev = prev+1
+            t=1
+    else:
+        t=1
+    for i in range (prev, angle, t):
+        board.digital[pin].write(i)
+        sleep(0.03)
+
 def rotateServo(pin, angle):
     board.digital[pin].write(angle)
-    sleep(0.015)
+    sleep(0.03)
 
 #MÉTODO INEFICAZ DE SEGURANÇA
 def segurança():
@@ -46,7 +62,7 @@ def func1():
         [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(20,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
         [sg.Text('Eixo Y'), sg.Slider(range=(0,108), default_value=50, size=(20,15), orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
         [sg.Button('Pos. 1'), sg.Button('Pos. 2'), sg.Button('Pos. 3'), sg.Button('Pos. 4'), sg.Button('Pos. 5')],
-        [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')],
+        [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.')],
         [sg.Button('voltar')]
 
     ]
@@ -62,23 +78,24 @@ def func2():
 
     return sg.Window('função 2', layout=layout, finalize=True)
 
-def mandarPos(win, ev, servo):
-    if window == win and event == ev:
-        rotateServo(servo, values[0])
-
 def lerPos(win, ev, lista):
     if window == win and event == ev:
         if len(lista) != 4:
-            lista.append(values['garra'])
-            lista.append(values['base'])
-            lista.append(values['x'])
-            lista.append(values['y'])
+            lista.append(int(values['garra']))
+            lista.append(int(values['base']))
+            lista.append(int(values['x']))
+            lista.append(int(values['y']))
             sg.Popup('Nova posição!:', 'Garra: '+ str(lista[0]), 'Base: '+ str(lista[1]), 'Eixo X: '+ str(lista[2]), 'Eixo Y: '+ str(lista[3]))
         else:
             sg.Popup('Coordenadas:', 'Garra: '+ str(lista[0]), 'Base: '+ str(lista[1]), 'Eixo X: '+ str(lista[2]), 'Eixo Y: '+ str(lista[3]))
 
 def runPos(lista, delay):
+    # rotateServo(garra, 180, 90)
+    # rotateServo(base, 100, 50)
+    # rotateServo(x, 90, 50)
+    # rotateServo(y, 50, 10)
     for i in range (5):
+        print(lista[i])
         rotateServo(garra, lista[i][0])
         rotateServo(base, lista[i][1])
         rotateServo(x, lista[i][2])
@@ -205,5 +222,8 @@ while True:
 
 
     if window == w2 and event =='Run':
-        runPos(pos, 1.5)
+        runPos(pos, 0.25)
         sg.Popup(':)')
+
+    if window == w2 and event =='Reset Pos.':
+        segurança()
