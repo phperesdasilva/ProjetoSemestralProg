@@ -3,7 +3,7 @@ from pyfirmata import Arduino, SERVO
 from time import sleep
 from tkinter import *
 
-port = 'COM4'
+port = 'COM6'
 garra = 3
 base = 9
 x = 10
@@ -84,9 +84,6 @@ def runPos(lista, delay):
         rotateServo(x, lista[i][2])
         rotateServo(y, lista[i][3])
         sleep(delay)
-
-tempo = 1.5
-
 
 w1, w2 = menu(), None
 
@@ -208,5 +205,5 @@ while True:
 
 
     if window == w2 and event =='Run':
-        runPos(pos, tempo)
+        runPos(pos, 1.5)
         sg.Popup(':)')
