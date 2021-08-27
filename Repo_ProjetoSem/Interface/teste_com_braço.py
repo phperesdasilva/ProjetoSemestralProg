@@ -1,6 +1,33 @@
 import PySimpleGUI as sg
+from pyfirmata import Arduino, SERVO 
 from time import sleep
 from tkinter import *
+
+port = 'COM4'
+garra = 3
+base = 9
+x = 10
+y = 11
+
+board=Arduino(port)
+
+board.digital[garra].mode = SERVO 
+board.digital[base].mode = SERVO 
+board.digital[x].mode = SERVO 
+board.digital[y].mode = SERVO 
+
+def rotateServo(pin, angle):
+    board.digital[pin].write(angle)
+    sleep(0.015)
+
+#MÉTODO INEFICAZ DE SEGURANÇA
+def segurança():
+    rotateServo(garra, 180)
+    rotateServo(base, 100)
+    rotateServo(x, 90)
+    rotateServo(y, 50)
+
+segurança()
 
 def menu():
     layout = [
@@ -14,10 +41,10 @@ def menu():
 
 def func1():
     layout = [
-        [sg.Text('Pos. R'), sg.Slider(range=(0,100), default_value=0, size=(20,15), orientation='horizontal', font=('Helvetica', 12))],
-        [sg.Text('Pos. X'), sg.Slider(range=(0,100), default_value=0, size=(20,15), orientation='horizontal', font=('Helvetica', 12))],
-        [sg.Text('Pos. Y'), sg.Slider(range=(0,100), default_value=0, size=(20,15), orientation='horizontal', font=('Helvetica', 12))],
-        [sg.Text('Pos. Z'), sg.Slider(range=(0,100), default_value=0, size=(20,15), orientation='horizontal', font=('Helvetica', 12))],
+        [sg.Text('Garra'), sg.Slider(range=(90,180), default_value=180, size=(20,15), orientation='horizontal', key='garra', change_submits=True, font=('Helvetica', 12))],
+        [sg.Text('Base'), sg.Slider(range=(0,180), default_value=100, size=(20,15), orientation='horizontal', key='base', change_submits=True, font=('Helvetica', 12))],
+        [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(20,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
+        [sg.Text('Eixo Y'), sg.Slider(range=(0,108), default_value=50, size=(20,15), orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
         [sg.Button('Pos. 1'), sg.Button('Pos. 2'), sg.Button('Pos. 3'), sg.Button('Pos. 4'), sg.Button('Pos. 5')],
         [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')],
         [sg.Button('voltar')]
@@ -35,42 +62,83 @@ def func2():
 
     return sg.Window('função 2', layout=layout, finalize=True)
 
+def mandarPos(win, ev, servo):
+    if window == win and event == ev:
+        rotateServo(servo, values[0])
+
 def lerPos(win, ev, lista):
     if window == win and event == ev:
         if len(lista) != 4:
-            lista.append(values[0])
-            lista.append(values[1])
-            lista.append(values[2])
-            lista.append(values[3])
-            sg.Popup('Nova posição!:', 'Pos. R: '+ str(lista[0]), 'Pos. X: '+ str(lista[1]), 'Pos. Y: '+ str(lista[2]), 'Pos. Z: '+ str(lista[3]))
+            lista.append(values['garra'])
+            lista.append(values['base'])
+            lista.append(values['x'])
+            lista.append(values['y'])
+            sg.Popup('Nova posição!:', 'Garra: '+ str(lista[0]), 'Base: '+ str(lista[1]), 'Eixo X: '+ str(lista[2]), 'Eixo Y: '+ str(lista[3]))
         else:
-            sg.Popup('Coordenadas:', 'Pos. R: '+ str(lista[0]), 'Pos. X: '+ str(lista[1]), 'Pos. Y: '+ str(lista[2]), 'Pos. Z: '+ str(lista[3]))
+            sg.Popup('Coordenadas:', 'Garra: '+ str(lista[0]), 'Base: '+ str(lista[1]), 'Eixo X: '+ str(lista[2]), 'Eixo Y: '+ str(lista[3]))
+
+def runPos(lista, delay):
+    for i in range (5):
+        rotateServo(garra, lista[i][0])
+        rotateServo(base, lista[i][1])
+        rotateServo(x, lista[i][2])
+        rotateServo(y, lista[i][3])
+        sleep(delay)
+
+tempo = 1.5
 
 
 w1, w2 = menu(), None
 
+pos = []
 pos1 = []
 pos2 = []
 pos3 = []
 pos4 = []
 pos5 = []
 
+pos.append(pos1)
+pos.append(pos2)
+pos.append(pos3)
+pos.append(pos4)
+pos.append(pos5)
+
 while True:
+
     window, event, values = sg.read_all_windows()
+
     if event == sg.WIN_CLOSED:
+        segurança()
+        sleep(1)
         break
-    
+
+
     if window == w1 and event == 'Função livre':
+        segurança()
         w1.hide()
         w2 = func1()
     elif window == w1 and event == 'Função 2':
+        segurança()
         w1.hide()
         w2 = func2()
 
     if event == 'voltar':
+        segurança()
         w2.hide()
         w1.un_hide()
+
+    if window == w2 and event == 'garra':
+        rotateServo(garra, int(values['garra']))
     
+    if window == w2 and event == 'base':
+        rotateServo(base, int(values['base']))
+
+    if window == w2 and event == 'x':
+        rotateServo(x, int(values['x']))
+
+    if window == w2 and event == 'y':
+        rotateServo(y, int(values['y']))
+
     lerPos(w2, 'Pos. 1', pos1)
     lerPos(w2, 'Pos. 2', pos2)
     lerPos(w2, 'Pos. 3', pos3)
@@ -140,4 +208,5 @@ while True:
 
 
     if window == w2 and event =='Run':
-        sg.Popup('TBD')
+        runPos(pos, tempo)
+        sg.Popup(':)')
