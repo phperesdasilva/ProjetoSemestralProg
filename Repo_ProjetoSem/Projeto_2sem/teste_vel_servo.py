@@ -57,4 +57,6 @@ while True:
     # rotateServo(base, 180, prevBase)
     # sleep(0.5)
     rotateServo(garra, base, x, y, 50, 90)
+    rotateServo(garra, base, x, y, 90, 20)
+    rotateServo(garra, base, x, y, 20, 90)
     rotateServo(garra, base, x, y, 90, 50)
