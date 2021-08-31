@@ -1,50 +1,49 @@
-import PySimpleGUI as sg
+from pyfirmata import Arduino, SERVO 
+from time import sleep
+from tkinter import *
 
-#func. janelas
-def login():
-    sg.theme('DarkAmber')
-    layout =[
-        [sg.Text('nome')],
-        [sg.Input()],
-        [sg.Button('continuar')]
-    ]
+port = 'COM4'
+pin1 = 3
+pin2 = 9
+pin3 = 10
+pin4 = 11
 
-    return sg.Window('login', layout=layout, finalize=True)
+board=Arduino(port)
 
-def pedido():
-    sg.theme('DarkAmber')
-    layout =[
-        [sg.Text('fazer pedido')],
-        [sg.Checkbox('Pizza 1', key='pizza1'), sg.Checkbox('Pizza 2', key='pizza2')],
-        [sg.Button('voltar'), sg.Button('fazer pedido')]
-    ]
-    return sg.Window('pedido', layout=layout, finalize=True)
+board.digital[pin1].mode = SERVO 
+board.digital[pin2].mode = SERVO 
+board.digital[pin3].mode = SERVO 
+board.digital[pin4].mode = SERVO 
 
-#janelas iniciais
-janela1, janela2 = login(), None
+def rotateServo(pin, angle):
+    board.digital[pin].write(angle)
+    sleep(0.015)
 
-#criar loop de leitura
-while True:
-    window, event, values = sg.read_all_windows()
-    #janela fechada
-    if event == sg.WIN_CLOSED:
-        break
-    #proxima janela
-    if window == janela1 and event == 'continuar':
-        janela2 = pedido()
-        janela1.hide()
+root = Tk()
+root.title('Tkinter Test')
+root.geometry('400x400')
 
-    #voltar
-    if window == janela2 and event == 'voltar':
-        janela2.hide()
-        janela1.un_hide()
+def getPos1(var):
+    rotateServo(pin1, horizontal1.get())
 
-    #pedido
-    if window == janela2 and event == 'fazer pedido':
-        if values['pizza1'] == True and values['pizza2'] == True:
-            sg.popup('foram pedidas ambas as pizzas')
-        elif values['pizza1'] == True:
-            sg.popup('foi pedida a pizza 1')
-        elif values['pizza2'] == True:
-            sg.popup('foi pedida a pizza 2')
-        
+def getPos2(var):
+    rotateServo(pin2, horizontal2.get())
+
+def getPos3(var):
+    rotateServo(pin3, horizontal3.get())
+
+def getPos4(var):
+    rotateServo(pin4, horizontal4.get())
+
+rotateServo(pin1, 90)
+rotateServo(pin2, 0)
+rotateServo(pin3, 90)
+rotateServo(pin4, 90)
+
+# horizontal1 = Scale(root, from_= 0, to=180, orient=HORIZONTAL, command=getPos1)
+# horizonta1.grid(row=0, column=0)
+
+
+# btn1 = Button(root, text='Pos. 1', command=getPos).grid(row=0, column=1)
+
+root.mainloop()
