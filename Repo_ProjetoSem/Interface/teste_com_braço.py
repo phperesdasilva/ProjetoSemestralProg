@@ -105,7 +105,7 @@ def runPos(lista, speed):
     #     rotateServo(y, lista[i][3])
     #     sleep(delay)
     for i in range (5):
-        if(i!=0):
+        if(i>0):
                 teste(garra, lista[i-1][0], lista[i][0], 0.01)
                 teste(base, lista[i-1][1], lista[i][1], 0.01)
                 teste(x, lista[i-1][2], lista[i][2], 0.01)
