@@ -12,8 +12,8 @@ class showScreen:
     def menu(self):
         layout = [
         [sg.Text('Braço Robótico')],
-        [sg.Button('Função livre', size=(20,5))],
-        [sg.Button('Função 2', size=(20,5))]
+        [sg.Button('Função livre', size=(10,3))],
+        [sg.Button('Função 2', size=(10,3))]
 
         ]
 
