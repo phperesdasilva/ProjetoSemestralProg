@@ -35,6 +35,22 @@ def rotateServo(pin1, pin2, pin3, pin4, prev, angle):
         print(i)
         sleep(0.03)
 
+def teste(pin, prev, angle):
+    i = prev
+    if(angle<prev):
+        while(i>angle):
+            board.digital[pin].write(i)
+            i = i - 1
+            sleep(0.03)
+    elif(angle==prev):
+        board.digital[pin].write(i)
+    elif(angle>prev):
+        while(i<angle):
+            i = i + 1
+            board.digital[pin].write(i)
+            sleep(0.03)
+
+
 #MÉTODO INEFICAZ DE SEGURANÇA
 # def segurança():
 #     rotateServo(x, 90, 90)
@@ -49,6 +65,12 @@ def rotateServo(pin1, pin2, pin3, pin4, prev, angle):
 
 while True:
 
+    teste(x, 90, 90)
+    teste(y, 50, 50)
+    teste(garra, 90, 180)
+    teste(base, 0, 180)
+    teste(garra, 180, 90)
+    teste(base, 180, 0)
     # segurança()
     # rotateServo(garra, prevGarra, 180)
     # rotateServo(base, prevBase, 180)
@@ -56,7 +78,7 @@ while True:
     # rotateServo(garra, 180, prevGarra)
     # rotateServo(base, 180, prevBase)
     # sleep(0.5)
-    rotateServo(garra, base, x, y, 50, 90)
-    rotateServo(garra, base, x, y, 90, 20)
-    rotateServo(garra, base, x, y, 20, 90)
-    rotateServo(garra, base, x, y, 90, 50)
+    # rotateServo(garra, base, x, y, 50, 90)
+    # rotateServo(garra, base, x, y, 90, 20)
+    # rotateServo(garra, base, x, y, 20, 90)
+    # rotateServo(garra, base, x, y, 90, 50)

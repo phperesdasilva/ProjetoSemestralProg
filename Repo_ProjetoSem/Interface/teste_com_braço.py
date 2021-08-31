@@ -16,21 +16,23 @@ board.digital[base].mode = SERVO
 board.digital[x].mode = SERVO 
 board.digital[y].mode = SERVO 
 
-def rotateServo_teste(pin, prev, angle):
+def teste(pin, prev, angle, spd):
+    i = prev
     if(angle<prev):
-        t=-1
+        while(i>angle):
+            board.digital[pin].write(i)
+            i = i - 1
+            sleep(spd)
+    elif(angle>prev):
+        while(i<angle):
+            i = i + 1
+            board.digital[pin].write(i)
+            sleep(spd)                
     elif(angle==prev):
-        if prev>0:
-            prev = prev-1
-            t = 1
-        else:
-            prev = prev+1
-            t=1
-    else:
-        t=1
-    for i in range (prev, angle, t):
         board.digital[pin].write(i)
-        sleep(0.03)
+        sleep(spd)
+
+
 
 def rotateServo(pin, angle):
     board.digital[pin].write(angle)
@@ -38,10 +40,10 @@ def rotateServo(pin, angle):
 
 #MÉTODO INEFICAZ DE SEGURANÇA
 def segurança():
-    rotateServo(garra, 180)
-    rotateServo(base, 100)
-    rotateServo(x, 90)
-    rotateServo(y, 50)
+    teste(garra, 180, 180, 0.02)
+    teste(base, 100, 100, 0.02)
+    teste(x, 90, 90, 0.02)
+    teste(y, 50, 50, 0.02)
 
 segurança()
 
@@ -60,7 +62,8 @@ def func1():
         [sg.Text('Garra'), sg.Slider(range=(90,180), default_value=180, size=(20,15), orientation='horizontal', key='garra', change_submits=True, font=('Helvetica', 12))],
         [sg.Text('Base'), sg.Slider(range=(0,180), default_value=100, size=(20,15), orientation='horizontal', key='base', change_submits=True, font=('Helvetica', 12))],
         [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(20,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
-        [sg.Text('Eixo Y'), sg.Slider(range=(0,108), default_value=50, size=(20,15), orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
+        [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(20,15), orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
+        [sg.Text('Veloc.'), sg.Slider(range=(50,100), default_value=50, size=(20,15), orientation='horizontal', key='spd', change_submits=True, font=('Helvetica', 12))],
         [sg.Button('Pos. 1'), sg.Button('Pos. 2'), sg.Button('Pos. 3'), sg.Button('Pos. 4'), sg.Button('Pos. 5')],
         [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.')],
         [sg.Button('voltar')]
@@ -89,18 +92,31 @@ def lerPos(win, ev, lista):
         else:
             sg.Popup('Coordenadas:', 'Garra: '+ str(lista[0]), 'Base: '+ str(lista[1]), 'Eixo X: '+ str(lista[2]), 'Eixo Y: '+ str(lista[3]))
 
-def runPos(lista, delay):
+def runPos(lista, speed):
     # rotateServo(garra, 180, 90)
     # rotateServo(base, 100, 50)
     # rotateServo(x, 90, 50)
     # rotateServo(y, 50, 10)
+    # for i in range (5):
+    #     print(lista[i])
+    #     rotateServo(garra, lista[i][0])
+    #     rotateServo(base, lista[i][1])
+    #     rotateServo(x, lista[i][2])
+    #     rotateServo(y, lista[i][3])
+    #     sleep(delay)
     for i in range (5):
-        print(lista[i])
-        rotateServo(garra, lista[i][0])
-        rotateServo(base, lista[i][1])
-        rotateServo(x, lista[i][2])
-        rotateServo(y, lista[i][3])
-        sleep(delay)
+        if(i!=0):
+                teste(garra, lista[i-1][0], lista[i][0], 0.01)
+                teste(base, lista[i-1][1], lista[i][1], 0.01)
+                teste(x, lista[i-1][2], lista[i][2], 0.01)
+                teste(y, lista[i-1][3], lista[i][3], 0.01)
+                
+        else:
+            teste(garra, lista[i][0], lista[i][0], 0.01)
+            teste(base, lista[i][1], lista[i][1], 0.01)
+            teste(x, lista[i][2], lista[i][2], 0.01)
+            teste(y, lista[i][3], lista[i][3], 0.01)
+            
 
 w1, w2 = menu(), None
 
@@ -142,7 +158,7 @@ while True:
         w1.un_hide()
 
     if window == w2 and event == 'garra':
-        rotateServo(garra, int(values['garra']))
+        teste(garra, int(values['garra']), int(values['garra']), 0.06)
     
     if window == w2 and event == 'base':
         rotateServo(base, int(values['base']))
@@ -152,6 +168,9 @@ while True:
 
     if window == w2 and event == 'y':
         rotateServo(y, int(values['y']))
+
+    if window == w2 and event == 'spd':
+        speed = int(values['spd'])
 
     lerPos(w2, 'Pos. 1', pos1)
     lerPos(w2, 'Pos. 2', pos2)
@@ -222,7 +241,7 @@ while True:
 
 
     if window == w2 and event =='Run':
-        runPos(pos, 0.25)
+        runPos(pos, int(values['spd']))
         sg.Popup(':)')
 
     if window == w2 and event =='Reset Pos.':
