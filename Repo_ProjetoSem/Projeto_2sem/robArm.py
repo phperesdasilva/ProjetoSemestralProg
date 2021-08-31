@@ -1,7 +1,5 @@
 from time import sleep
-
 from pyfirmata import SERVO, Arduino
-
 
 class robArm:
     def __init__(self, garra, base, eixoX, eixoY, board):

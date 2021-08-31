@@ -1,9 +1,6 @@
 from time import sleep
-
 import PySimpleGUI as sg
-
 from robArm import robArm
-
 
 class showScreen:
     def __init__(self, robo):
