@@ -4,24 +4,48 @@ import PySimpleGUI as sg
 
 from robArm import robArm
 
-
 class showScreen:
 
-    sg.theme('NeutralBlue')
+    sg.theme('LightGray6')
 
     def __init__(self, robo):
         self.robo = robo
         self.window = None
         self.event = None
         self.values = None
+        
+        self.bg_size = (800,400)
 
     def menu(self):
         layout = [
-        [sg.Text('Braço Robótico', size=(20,3), font=, justification='c')],
-        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2))]
+        [sg.Text('Interface - Braço Robótico', size=(20,3), font=('Times 25 bold'), justification='c')],
+        [sg.Image(filename='C:\Users\First Place\Documents\GitHub\ProjetoSemestralProg\garra.png')]
+        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2)), sg.Button('Guia', size=(10,2))]
         ]
 
-        return sg.Window('Interface - Braço Robótico', layout=layout, element_justification='c', size=(300,150), finalize=True)
+        return sg.Window('Interface - Braço Robótico', grab_anywhere=False, size=self.bg_size, transparent_color=None, layout=layout, no_titlebar=False, element_justification='c', finalize=True)
+    
+    def guide(self):
+        layout = [
+            [sg.Text('Função Livre:', font=('Times 14'))],
+            [sg.Text('- Possui sliders para movimentar cada servo do robô individualmente.')],
+            [sg.Text('- Cada botão memoriza as posições dos servos.')],
+            [sg.Text('- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.')],
+            [sg.Text('- O botão "Reset Pos." limpa a memória.')],
+            [sg.Text('- O botão "Idle Pos." retorna o robô para sua posição de espera.')],
+            [sg.Text('- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.')],
+            [sg.Text('Função Cópia:', font=('Times 14'))],
+            [sg.Text('- O robô posicionador deve ser movido para a posição desejada.')],
+            [sg.Text('- A posição do robô posicionador será exibida no gráfico ao lado.')],
+            [sg.Text('- Cada botão memoriza as posições dos servos.')],
+            [sg.Text('- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.')],
+            [sg.Text('- O botão "Reset Pos." limpa a memória.')],
+            [sg.Text('- O botão "Idle Pos." retorna o robô para sua posição de espera.')],
+            [sg.Text('- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.')],
+            [sg.Button('Voltar')]
+        ]
+
+        return sg.Window('Guia', element_justification='l', layout=layout, finalize=True)
     
     def func1(self):
         layout = [
@@ -31,11 +55,11 @@ class showScreen:
             [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(40,15),  orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
             [sg.Button('Pos. 1', size=(10,2)), sg.Button('Pos. 2', size=(10,2)), sg.Button('Pos. 3', size=(10,2)), sg.Button('Pos. 4', size=(10,2)), sg.Button('Pos. 5', size=(10,2))],
             [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.'), sg.Button('Idle Pos.')],
-            [sg.Button('voltar')]
+            [sg.Button('Voltar')]
 
         ]
 
-        return sg.Window('Função Livre', layout=layout, finalize=True)
+        return sg.Window('Função Livre', element_justification='c', layout=layout, size=self.bg_size, finalize=True)
 
     def func2(self):
         options = [
@@ -47,7 +71,7 @@ class showScreen:
             [sg.Button('Reset Pos.')],
             [sg.Button('Idle Pos.')],
             [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')], 
-            [sg.Button('voltar')]
+            [sg.Button('Voltar')]
         ]
 
         layout = [
@@ -62,15 +86,17 @@ class showScreen:
                     drag_submits=True,
                     
                 ),
-                sg.Col(options, key="op"),
+                sg.Col(options),
             ]
         ]
 
-        return sg.Window('Função Cópia', layout=layout, finalize=True)
+        return sg.Window('Função Cópia', element_justification='c', size=self.bg_size, layout=layout, finalize=True)
 
     def lerPos(self, win, ev, lista):
         if self.window == win and self.event == ev:
             if len(lista) != 4:
+                print('lista antes')
+                print(self.values)
                 lista.append(int(self.values['garra']))
                 lista.append(int(self.values['base']))
                 lista.append(int(self.values['x']))
@@ -92,7 +118,7 @@ class showScreen:
         pos = [[], [], [], [], []]
 
         while True:
-
+            
             self.window, self.event, self.values = sg.read_all_windows()
 
             if self.event == sg.WIN_CLOSED:
@@ -100,33 +126,45 @@ class showScreen:
                 sleep(1)
                 break
 
-
             if self.window == w1 and self.event == 'Função Livre':
                 self.robo.segurança()
                 w1.hide()
                 w2 = self.func1()
+                tela = 1
             elif self.window == w1 and self.event == 'Função Cópia':
                 self.robo.segurança()
                 w1.hide()
                 w2 = self.func2()
-
-            if self.event == 'voltar':
+                tela = 2
+            elif self.window == w1 and self.event == 'Guia':
                 self.robo.segurança()
+                w1.hide()
+                w2 = self.guide()
+                tela = 3
+
+            if self.event == 'Voltar':
+                self.robo.segurança()
+                pos[0].clear()
+                pos[1].clear()
+                pos[2].clear()
+                pos[3].clear()
+                pos[4].clear()
                 w2.hide()
                 w1.un_hide()
 
-            self.rodaPos(w2, 'garra', 'garra', self.robo.garra)
-            self.rodaPos(w2, 'base', 'base', self.robo.base)
-            self.rodaPos(w2, 'x', 'x', self.robo.eixoX)
-            self.rodaPos(w2, 'y', 'y', self.robo.eixoY)
-            
-            self.lerPos(w2, 'Pos. 1', pos[0])
-            self.lerPos(w2, 'Pos. 2', pos[1])
-            self.lerPos(w2, 'Pos. 3', pos[2])
-            self.lerPos(w2, 'Pos. 4', pos[3])
-            self.lerPos(w2, 'Pos. 5', pos[4])
+            if self.window == w2 and tela == 1:
+                self.rodaPos(w2, 'garra', 'garra', self.robo.garra)
+                self.rodaPos(w2, 'base', 'base', self.robo.base)
+                self.rodaPos(w2, 'x', 'x', self.robo.eixoX)
+                self.rodaPos(w2, 'y', 'y', self.robo.eixoY)
+                
+                self.lerPos(w2, 'Pos. 1', pos[0])
+                self.lerPos(w2, 'Pos. 2', pos[1])
+                self.lerPos(w2, 'Pos. 3', pos[2])
+                self.lerPos(w2, 'Pos. 4', pos[3])
+                self.lerPos(w2, 'Pos. 5', pos[4])
 
-            if self.window == w2 and self.event =='Clear':
+            if self.event =='Clear':
                 pos[0].clear()
                 pos[1].clear()
                 pos[2].clear()
@@ -135,9 +173,9 @@ class showScreen:
                 sg.Popup('Posições zeradas!')
 
 
-            if self.window == w2 and self.event =='Run':
+            if self.event =='Run':
                 self.robo.runPos(pos, 0.03)
                 sg.Popup(':)')
 
-            if self.window == w2 and self.event =='Idle Pos.':
+            if self.event =='Idle Pos.':
                 self.robo.segurança()
