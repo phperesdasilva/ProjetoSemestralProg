@@ -1,8 +1,14 @@
 from time import sleep
+
 import PySimpleGUI as sg
+
 from robArm import robArm
 
+
 class showScreen:
+
+    sg.theme('NeutralBlue')
+
     def __init__(self, robo):
         self.robo = robo
         self.window = None
@@ -11,23 +17,20 @@ class showScreen:
 
     def menu(self):
         layout = [
-        [sg.Text('Braço Robótico')],
-        [sg.Button('Função livre', size=(10,3))],
-        [sg.Button('Função 2', size=(10,3))]
-
+        [sg.Text('Braço Robótico', size=(20,3), font=, justification='c')],
+        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2))]
         ]
 
-        return sg.Window('menu', layout=layout, finalize=True)
+        return sg.Window('Interface - Braço Robótico', layout=layout, element_justification='c', size=(300,150), finalize=True)
     
     def func1(self):
         layout = [
-            [sg.Text('Garra'), sg.Slider(range=(90,180), default_value=180, size=(20,15), orientation='horizontal', key='garra', change_submits=True, font=('Helvetica', 12))],
-            [sg.Text('Base'), sg.Slider(range=(0,180), default_value=100, size=(20,15), orientation='horizontal', key='base', change_submits=True, font=('Helvetica', 12))],
-            [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(20,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
-            [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(20,15), orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
-            #[sg.Text('Veloc.'), sg.Slider(range=(50,100), default_value=50, size=(20,15), orientation='horizontal', key='spd', change_submits=True, font=('Helvetica', 12))],
-            [sg.Button('Pos. 1'), sg.Button('Pos. 2'), sg.Button('Pos. 3'), sg.Button('Pos. 4'), sg.Button('Pos. 5')],
-            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.')],
+            [sg.Text('Garra'), sg.Slider(range=(90,180), default_value=180, size=(40,15), orientation='horizontal', key='garra', change_submits=True, font=('Helvetica', 12))],
+            [sg.Text('Base'), sg.Slider(range=(0,180), default_value=100, size=(40,15), orientation='horizontal', key='base', change_submits=True, font=('Helvetica', 12))],
+            [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(40,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
+            [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(40,15),  orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
+            [sg.Button('Pos. 1', size=(10,2)), sg.Button('Pos. 2', size=(10,2)), sg.Button('Pos. 3', size=(10,2)), sg.Button('Pos. 4', size=(10,2)), sg.Button('Pos. 5', size=(10,2))],
+            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.'), sg.Button('Idle Pos.')],
             [sg.Button('voltar')]
 
         ]
@@ -35,13 +38,35 @@ class showScreen:
         return sg.Window('Função Livre', layout=layout, finalize=True)
 
     def func2(self):
-        layout = [
-            [sg.Text('TBD')],
+        options = [
+            [sg.Button('Pos. 1', size=(10,2))],
+            [sg.Button('Pos. 2', size=(10,2))], 
+            [sg.Button('Pos. 3', size=(10,2))], 
+            [sg.Button('Pos. 4', size=(10,2))], 
+            [sg.Button('Pos. 5', size=(10,2))],
+            [sg.Button('Reset Pos.')],
+            [sg.Button('Idle Pos.')],
+            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')], 
             [sg.Button('voltar')]
-
         ]
 
-        return sg.Window('função 2', layout=layout, finalize=True)
+        layout = [
+            [
+                sg.Graph(
+                    canvas_size=(300, 380),
+                    graph_bottom_left=(0, 0),
+                    graph_top_right=(800, 800),
+                    key="grafico",
+                    enable_events=True,
+                    background_color="white",
+                    drag_submits=True,
+                    
+                ),
+                sg.Col(options, key="op"),
+            ]
+        ]
+
+        return sg.Window('Função Cópia', layout=layout, finalize=True)
 
     def lerPos(self, win, ev, lista):
         if self.window == win and self.event == ev:
@@ -76,11 +101,11 @@ class showScreen:
                 break
 
 
-            if self.window == w1 and self.event == 'Função livre':
+            if self.window == w1 and self.event == 'Função Livre':
                 self.robo.segurança()
                 w1.hide()
                 w2 = self.func1()
-            elif self.window == w1 and self.event == 'Função 2':
+            elif self.window == w1 and self.event == 'Função Cópia':
                 self.robo.segurança()
                 w1.hide()
                 w2 = self.func2()
@@ -114,5 +139,5 @@ class showScreen:
                 self.robo.runPos(pos, 0.03)
                 sg.Popup(':)')
 
-            if self.window == w2 and self.event =='Reset Pos.':
+            if self.window == w2 and self.event =='Idle Pos.':
                 self.robo.segurança()
