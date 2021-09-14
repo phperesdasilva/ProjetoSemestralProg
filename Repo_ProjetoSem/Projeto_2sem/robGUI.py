@@ -5,7 +5,6 @@ import PySimpleGUI as sg
 from robArm import robArm
 
 class showScreen:
-
     sg.theme('LightGray6')
 
     def __init__(self, robo):
@@ -15,12 +14,13 @@ class showScreen:
         self.values = None
         
         self.bg_size = (800,400)
+        self.gif = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/gif garra.gif'
 
     def menu(self):
         layout = [
-        [sg.Text('Interface - Braço Robótico', size=(20,3), font=('Times 25 bold'), justification='c')],
-        [sg.Image(filename='C:\Users\First Place\Documents\GitHub\ProjetoSemestralProg\garra.png')]
-        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2)), sg.Button('Guia', size=(10,2))]
+        [sg.Text('Interface - Braço Robótico', size=(20,0), font=('Times 25 bold'), justification='c')],
+        [sg.Image(filename=self.gif, key='gif')],
+        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2)), sg.Button('Help', size=(3,1))]
         ]
 
         return sg.Window('Interface - Braço Robótico', grab_anywhere=False, size=self.bg_size, transparent_color=None, layout=layout, no_titlebar=False, element_justification='c', finalize=True)
@@ -41,11 +41,10 @@ class showScreen:
             [sg.Text('- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.')],
             [sg.Text('- O botão "Reset Pos." limpa a memória.')],
             [sg.Text('- O botão "Idle Pos." retorna o robô para sua posição de espera.')],
-            [sg.Text('- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.')],
-            [sg.Button('Voltar')]
+            [sg.Text('- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.')]
         ]
 
-        return sg.Window('Guia', element_justification='l', layout=layout, finalize=True)
+        return sg.Window('Help', icon=self.gif, element_justification='l', layout=layout, finalize=True)
     
     def func1(self):
         layout = [
@@ -55,11 +54,12 @@ class showScreen:
             [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(40,15),  orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
             [sg.Button('Pos. 1', size=(10,2)), sg.Button('Pos. 2', size=(10,2)), sg.Button('Pos. 3', size=(10,2)), sg.Button('Pos. 4', size=(10,2)), sg.Button('Pos. 5', size=(10,2))],
             [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.'), sg.Button('Idle Pos.')],
-            [sg.Button('Voltar')]
+            [sg.Button('Voltar')], 
+            [sg.Button('Help', pad=(100,0))]
 
         ]
 
-        return sg.Window('Função Livre', element_justification='c', layout=layout, size=self.bg_size, finalize=True)
+        return sg.Window('Função Livre', icon=self.gif, element_justification='c', layout=layout, size=self.bg_size, finalize=True)
 
     def func2(self):
         options = [
@@ -71,7 +71,7 @@ class showScreen:
             [sg.Button('Reset Pos.')],
             [sg.Button('Idle Pos.')],
             [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')], 
-            [sg.Button('Voltar')]
+            [sg.Button('Voltar'), sg.Button('Help', icon=self.gif, pad=(100,0))]
         ]
 
         layout = [
@@ -90,7 +90,7 @@ class showScreen:
             ]
         ]
 
-        return sg.Window('Função Cópia', element_justification='c', size=self.bg_size, layout=layout, finalize=True)
+        return sg.Window('Função Cópia', icon=self.gif, element_justification='c', size=self.bg_size, layout=layout, finalize=True)
 
     def lerPos(self, win, ev, lista):
         if self.window == win and self.event == ev:
@@ -120,7 +120,7 @@ class showScreen:
         while True:
             
             self.window, self.event, self.values = sg.read_all_windows()
-
+            
             if self.event == sg.WIN_CLOSED:
                 self.robo.segurança()
                 sleep(1)
@@ -136,11 +136,26 @@ class showScreen:
                 w1.hide()
                 w2 = self.func2()
                 tela = 2
-            elif self.window == w1 and self.event == 'Guia':
-                self.robo.segurança()
-                w1.hide()
-                w2 = self.guide()
-                tela = 3
+
+            if self.event == 'Help':
+                sg.Popup("""Função Livre:
+
+- Possui sliders para movimentar cada servo do robô individualmente.
+- Cada botão memoriza as posições dos servos.
+- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.
+- O botão "Reset Pos." limpa a memória.
+- O botão "Idle Pos." retorna o robô para sua posição de espera.
+- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.
+
+Função Cópia:
+
+- O robô posicionador deve ser movido para a posição desejada.
+- A posição do robô posicionador será exibida no gráfico ao lado.
+- Cada botão memoriza as posições dos servos.
+- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.
+- O botão "Reset Pos." limpa a memória.
+- O botão "Idle Pos." retorna o robô para sua posição de espera.
+- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.""")
 
             if self.event == 'Voltar':
                 self.robo.segurança()
