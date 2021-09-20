@@ -14,7 +14,7 @@ class showScreen:
         self.values = None
         
         self.bg_size = (800,400)
-        self.gif = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/gif garra.gif'
+        self.gif = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/Images/gif garra.gif'
 
     def menu(self):
         layout = [
@@ -71,7 +71,7 @@ class showScreen:
             [sg.Button('Reset Pos.')],
             [sg.Button('Idle Pos.')],
             [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')], 
-            [sg.Button('Voltar'), sg.Button('Help', icon=self.gif, pad=(100,0))]
+            [sg.Button('Voltar'), sg.Button('Help', pad=(100,0))]
         ]
 
         layout = [
