@@ -1,8 +1,32 @@
 from time import sleep
-
 import PySimpleGUI as sg
-
+import pygame
+import numpy as np
 from robArm import robArm
+
+#https://studywolf.wordpress.com/2015/03/06/arm-visualization-with-pygame/
+class ArmPart:
+
+    def __init__(self, pic, scale=1.0):
+        self.base = pygame.image.load(pic)
+        # some handy constants
+        self.length = self.base.get_rect()[2]
+        self.scale = self.length * scale
+        self.offset = self.scale / 2.0
+ 
+        self.rotation = 0.0 # in radians
+ 
+    def rotate(self, rotation):
+
+        self.rotation += rotation 
+        # rotate our image 
+        image = pygame.transform.rotozoom(self.base, np.degrees(self.rotation), 1)
+        # reset the center
+        rect = image.get_rect()
+        rect.center = (150, 150)
+ 
+        return image, rect
+
 
 class showScreen:
     sg.theme('LightGray6')
