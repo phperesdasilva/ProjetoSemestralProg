@@ -23,9 +23,10 @@ class ArmPart:
         image = pygame.transform.rotozoom(self.base, np.degrees(self.rotation), 1)
         # reset the center
         rect = image.get_rect()
-        rect.center = (150, 150)
+        rect.center = (0, 0)
  
         return image, rect
+
 
 
 class showScreen:
