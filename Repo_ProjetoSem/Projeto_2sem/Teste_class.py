@@ -1,10 +1,11 @@
+from pyfirmata import SERVO, Arduino
+
 from robArm import robArm
 from robGUI import showScreen
-from pyfirmata import Arduino, SERVO 
 
 board = Arduino('COM4')
 
-robo = robArm(3, 9, 10, 11, board)\
+robo = robArm(3, 9, 10, 11, board)
 
 gui = showScreen(robo)
 
