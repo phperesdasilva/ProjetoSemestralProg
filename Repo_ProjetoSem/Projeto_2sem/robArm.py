@@ -1,5 +1,6 @@
 from time import sleep
 from pyfirmata import SERVO, Arduino
+import math 
 
 class robArm:
     def __init__(self, garra, base, eixoX, eixoY, board):
@@ -32,18 +33,26 @@ class robArm:
 
     def runPos(self, lista, speed):
         for i in range(5):
-            if i > 0:
-                self.sendPos(self.garra, lista[i-1][0], lista[i][0], speed)
-                self.sendPos(self.base, lista[i-1][1], lista[i][1], speed)
-                self.sendPos(self.eixoX, lista[i-1][2], lista[i][2], speed)
-                self.sendPos(self.eixoY, lista[i-1][3], lista[i][3], speed)
-                sleep(0.25)
+            if not len(lista[i]):
+                if i==0:
+                    lista[0] = [180, 100, 90, 50]
+                else:
+                    lista[i] = lista[i-1]
             else:
-                self.sendPos(self.garra, lista[i][0], lista[i][0], speed)
-                self.sendPos(self.base, lista[i][1], lista[i][1], speed)
-                self.sendPos(self.eixoX, lista[i][2], lista[i][2], speed)
-                self.sendPos(self.eixoY, lista[i][3], lista[i][3], speed)
-                sleep(0.25)
+                if i > 0:
+                    self.sendPos(self.garra, lista[i-1][0], lista[i][0], speed)
+                    self.sendPos(self.base, lista[i-1][1], lista[i][1], speed)
+                    self.sendPos(self.eixoX, lista[i-1][2], lista[i][2], speed)
+                    self.sendPos(self.eixoY, lista[i-1][3], lista[i][3], speed)
+                    print(lista[i])
+                    sleep(0.25)
+                else:
+                    print(lista[i])
+                    self.sendPos(self.garra, lista[i][0], lista[i][0], speed)
+                    self.sendPos(self.base, lista[i][1], lista[i][1], speed)
+                    self.sendPos(self.eixoX, lista[i][2], lista[i][2], speed)
+                    self.sendPos(self.eixoY, lista[i][3], lista[i][3], speed)
+                    sleep(0.25)
 
     def segurança(self):
         self.sendPos(self.garra, 180, 180, 0.06)

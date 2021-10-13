@@ -1,32 +1,7 @@
 from time import sleep
 import PySimpleGUI as sg
-import pygame
 import numpy as np
 from robArm import robArm
-
-#https://studywolf.wordpress.com/2015/03/06/arm-visualization-with-pygame/
-class ArmPart:
-
-    def __init__(self, pic, scale=1.0):
-        self.base = pygame.image.load(pic)
-        # some handy constants
-        self.length = self.base.get_rect()[2]
-        self.scale = self.length * scale
-        self.offset = self.scale / 2.0
- 
-        self.rotation = 0.0 # in radians
- 
-    def rotate(self, rotation):
-
-        self.rotation += rotation 
-        # rotate our image 
-        image = pygame.transform.rotozoom(self.base, np.degrees(self.rotation), 1)
-        # reset the center
-        rect = image.get_rect()
-        rect.center = (150, 150)
- 
-        return image, rect
-
 
 class showScreen:
     sg.theme('LightGray6')
@@ -36,7 +11,9 @@ class showScreen:
         self.window = None
         self.event = None
         self.values = None
-        
+
+        self.loop = None
+
         self.bg_size = (800,400)
         self.gif = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/Images/gif garra.gif'
 
@@ -77,7 +54,7 @@ class showScreen:
             [sg.Text('Eixo X'), sg.Slider(range=(0,180), default_value=90, size=(40,15), orientation='horizontal', key='x', change_submits=True, font=('Helvetica', 12))],
             [sg.Text('Eixo Y'), sg.Slider(range=(0,180), default_value=50, size=(40,15),  orientation='horizontal', key='y', change_submits=True, font=('Helvetica', 12))],
             [sg.Button('Pos. 1', size=(10,2)), sg.Button('Pos. 2', size=(10,2)), sg.Button('Pos. 3', size=(10,2)), sg.Button('Pos. 4', size=(10,2)), sg.Button('Pos. 5', size=(10,2))],
-            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Reset Pos.'), sg.Button('Idle Pos.')],
+            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red'), sg.Button('Idle Pos.')],
             [sg.Button('Voltar')], 
             [sg.Button('Help', pad=(100,0))]
 
@@ -92,9 +69,8 @@ class showScreen:
             [sg.Button('Pos. 3', size=(10,2))], 
             [sg.Button('Pos. 4', size=(10,2))], 
             [sg.Button('Pos. 5', size=(10,2))],
-            [sg.Button('Reset Pos.')],
             [sg.Button('Idle Pos.')],
-            [sg.Button('Run', button_color='green'), sg.Button('Clear', button_color='red')], 
+            [sg.Button('Run', button_color=('green')), sg.Button('Clear', button_color='red')], 
             [sg.Button('Voltar'), sg.Button('Help', pad=(100,0))]
         ]
 
@@ -119,8 +95,8 @@ class showScreen:
     def lerPos(self, win, ev, lista):
         if self.window == win and self.event == ev:
             if len(lista) != 4:
-                print('lista antes')
                 print(self.values)
+                self.window.FindElement(ev).Update(button_color=('green'))
                 lista.append(int(self.values['garra']))
                 lista.append(int(self.values['base']))
                 lista.append(int(self.values['x']))
@@ -196,7 +172,7 @@ Função Cópia:
                 self.rodaPos(w2, 'base', 'base', self.robo.base)
                 self.rodaPos(w2, 'x', 'x', self.robo.eixoX)
                 self.rodaPos(w2, 'y', 'y', self.robo.eixoY)
-                
+
                 self.lerPos(w2, 'Pos. 1', pos[0])
                 self.lerPos(w2, 'Pos. 2', pos[1])
                 self.lerPos(w2, 'Pos. 3', pos[2])
@@ -209,8 +185,16 @@ Função Cópia:
                 pos[2].clear()
                 pos[3].clear()
                 pos[4].clear()
+                self.window.FindElement('Pos. 1').Update(button_color=(sg.theme_button_color()))
+                self.window.FindElement('Pos. 2').Update(button_color=(sg.theme_button_color()))
+                self.window.FindElement('Pos. 3').Update(button_color=(sg.theme_button_color()))
+                self.window.FindElement('Pos. 4').Update(button_color=(sg.theme_button_color()))
+                self.window.FindElement('Pos. 5').Update(button_color=(sg.theme_button_color()))
                 sg.Popup('Posições zeradas!')
 
+            if self.event =='Reset Pos.':
+                self.loop = True
+                self.resetPos(pos)
 
             if self.event =='Run':
                 self.robo.runPos(pos, 0.03)
