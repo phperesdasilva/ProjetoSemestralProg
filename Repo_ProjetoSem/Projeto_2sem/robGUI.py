@@ -15,16 +15,19 @@ class showScreen:
         self.loop = None
 
         self.bg_size = (800,400)
-        self.gif = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/Images/gif garra.gif'
+        self.pic = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/Images/garra.png'
+        self.icon = 'C:/Users/First Place/Documents/GitHub/ProjetoSemestralProg/Images/garra.ico'
 
     def menu(self):
         layout = [
         [sg.Text('Interface - Braço Robótico', size=(20,0), font=('Times 25 bold'), justification='c')],
-        [sg.Image(filename=self.gif, key='gif')],
-        [sg.Button('Função Livre', size=(10,2)), sg.Button('Função Cópia', size=(10,2)), sg.Button('Help', size=(3,1))]
+        [sg.Image(filename=self.pic, key='pic')],
+        [sg.Button('Função Livre', size=(10,2)), 
+        #sg.Button('Função Cópia', size=(10,2)), 
+        sg.Button('Help', size=(3,1))]
         ]
 
-        return sg.Window('Interface - Braço Robótico', grab_anywhere=False, size=self.bg_size, transparent_color=None, layout=layout, no_titlebar=False, element_justification='c', finalize=True)
+        return sg.Window('Interface - Braço Robótico',icon=self.icon, grab_anywhere=False, size=self.bg_size, transparent_color=None, layout=layout, no_titlebar=False, element_justification='c', finalize=True)
     
     def guide(self):
         layout = [
@@ -45,7 +48,7 @@ class showScreen:
             [sg.Text('- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.')]
         ]
 
-        return sg.Window('Help', icon=self.gif, element_justification='l', layout=layout, finalize=True)
+        return sg.Window('Help', icon=self.icon, element_justification='l', layout=layout, finalize=True)
     
     def func1(self):
         layout = [
@@ -60,10 +63,10 @@ class showScreen:
 
         ]
 
-        return sg.Window('Função Livre', icon=self.gif, element_justification='c', layout=layout, size=self.bg_size, finalize=True)
+        return sg.Window('Função Livre', icon=self.icon, element_justification='c', layout=layout, size=self.bg_size, finalize=True)
 
     def func2(self):
-        options = [
+        layout = [
             [sg.Button('Pos. 1', size=(10,2))],
             [sg.Button('Pos. 2', size=(10,2))], 
             [sg.Button('Pos. 3', size=(10,2))], 
@@ -74,23 +77,7 @@ class showScreen:
             [sg.Button('Voltar'), sg.Button('Help', pad=(100,0))]
         ]
 
-        layout = [
-            [
-                sg.Graph(
-                    canvas_size=(300, 380),
-                    graph_bottom_left=(0, 0),
-                    graph_top_right=(800, 800),
-                    key="grafico",
-                    enable_events=True,
-                    background_color="white",
-                    drag_submits=True,
-                    
-                ),
-                sg.Col(options),
-            ]
-        ]
-
-        return sg.Window('Função Cópia', icon=self.gif, element_justification='c', size=self.bg_size, layout=layout, finalize=True)
+        return sg.Window('Função Cópia', icon=self.icon, element_justification='c', size=self.bg_size, layout=layout, finalize=True)
 
     def lerPos(self, win, ev, lista):
         if self.window == win and self.event == ev:
@@ -145,17 +132,16 @@ class showScreen:
 - Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.
 - O botão "Reset Pos." limpa a memória.
 - O botão "Idle Pos." retorna o robô para sua posição de espera.
-- O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.
-
-Função Cópia:
-
-- O robô posicionador deve ser movido para a posição desejada.
-- A posição do robô posicionador será exibida no gráfico ao lado.
-- Cada botão memoriza as posições dos servos.
-- Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.
-- O botão "Reset Pos." limpa a memória.
-- O botão "Idle Pos." retorna o robô para sua posição de espera.
 - O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.""")
+
+# Função Cópia:
+
+# - O robô posicionador deve ser movido para a posição desejada.
+# - Cada botão memoriza as posições dos servos.
+# - Uma vez gravada as posições, clicar novamente no botão irá exibir as coordenadas memorizadas.
+# - O botão "Reset Pos." limpa a memória.
+# - O botão "Idle Pos." retorna o robô para sua posição de espera.
+# - O botão "Run" faz com que o robô passe pelas coordenadas em ordem de posição.""")
 
             if self.event == 'Voltar':
                 self.robo.segurança()
@@ -185,16 +171,17 @@ Função Cópia:
                 pos[2].clear()
                 pos[3].clear()
                 pos[4].clear()
-                self.window.FindElement('Pos. 1').Update(button_color=(sg.theme_button_color()))
-                self.window.FindElement('Pos. 2').Update(button_color=(sg.theme_button_color()))
-                self.window.FindElement('Pos. 3').Update(button_color=(sg.theme_button_color()))
-                self.window.FindElement('Pos. 4').Update(button_color=(sg.theme_button_color()))
-                self.window.FindElement('Pos. 5').Update(button_color=(sg.theme_button_color()))
+                self.window.FindElement('Pos. 1').Update(button_color='red')
+                self.window.FindElement('Pos. 2').Update(button_color='red')
+                self.window.FindElement('Pos. 3').Update(button_color='red')
+                self.window.FindElement('Pos. 4').Update(button_color='red')
+                self.window.FindElement('Pos. 5').Update(button_color='red')
                 sg.Popup('Posições zeradas!')
-
-            if self.event =='Reset Pos.':
-                self.loop = True
-                self.resetPos(pos)
+                self.window.FindElement('Pos. 1').Update(button_color=sg.theme_button_color())
+                self.window.FindElement('Pos. 2').Update(button_color=sg.theme_button_color())
+                self.window.FindElement('Pos. 3').Update(button_color=sg.theme_button_color())
+                self.window.FindElement('Pos. 4').Update(button_color=sg.theme_button_color())
+                self.window.FindElement('Pos. 5').Update(button_color=sg.theme_button_color())
 
             if self.event =='Run':
                 self.robo.runPos(pos, 0.03)
